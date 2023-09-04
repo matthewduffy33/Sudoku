@@ -1,0 +1,352 @@
+body{
+    font-family: "Noticia Text";
+    background-color:#fcfcfc;
+}
+
+table{
+    height: 70vh;
+    width:100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+ }
+
+td{
+    border: 1px solid;
+    text-align: center;
+    font-family: "Times New Roman", "Times", "serif";
+    font-size: 1.8rem;
+
+}
+
+tr:first-child {
+    border-top:solid;
+}
+
+tr:nth-child(3n) td {
+    border-bottom:solid ;
+}
+
+input[type=number]{
+    border:none;
+    outline: none;
+    font-size: 1.8rem;
+    text-align: center;
+    font-family: "Over the Rainbow";
+    color: #323131;
+    background-color:#fcfcfc;
+
+}
+
+
+.hover input[type=number], .hover{
+    background-color:#DDDDDD;
+}
+
+.hoverSelected input[type=number], .hoverSelected{
+    background-color:#d2f7dc;
+}
+
+
+
+.hoverSelect, .hoverSelect input[type=number]{
+    background-color:#5d79b0;
+}
+
+
+.selected input[type=number], .selected{
+    background-color:#ffefb5;
+}
+
+
+.gridBorderRight{
+    border-right:solid;
+}
+
+.gridBorderLeft{
+    border-left:solid;
+}
+
+
+.options{
+    position:absolute;
+    width:40%;
+    top:0;
+    right:0;
+    font-size: 10px;
+    font-family: "Delius";
+
+
+}
+
+.optionBtn{
+    height:70px;
+    width:70px;
+    margin:5px;
+    background-color: #d2f7dc;
+    color: black;
+    border: 4px solid #d2f7dc; /* Green */
+    border-radius: 8px;
+
+}
+.optionBtn:hover{
+    background-color:white;
+    border-radius: 8px;
+}
+
+.clickedIn{
+    height:70px;
+    width:70px;
+    opacity: 0.5;
+    background-color:#ebebeb !important;
+    border: 4px solid #ebebeb !important;
+
+}
+
+.clickedIn:hover{
+    opacity: 1;
+}
+
+.hiddenBtn{
+    display:none;
+}
+
+#hintBtn{
+    float:right;
+    background-color:#d2f7dc;
+    color: black;
+    border: 4px solid #d2f7dc; /* Green */
+    width:100%;
+    height:10vh;
+    border-radius: 8px;
+}
+
+#hintBtn:hover{
+    background-color: white;
+    width:100%;
+    border-radius: 8px;
+}
+
+
+.showBtn{
+    display:block;
+}
+
+#undoBtn, #redoBtn{
+        width:100%;
+        float:right;
+        background-color: #d2f7dc;
+        color: black;
+        border: 4px solid #d2f7dc; /* Green */
+        height:10vh;
+        border-radius: 8px;
+}
+
+#undoBtn:hover, #redoBtn:hover{
+
+        background-color: white;
+        color: black;
+}
+
+#undoBtn:disabled, #redoBtn:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color:#ebebeb !important;
+    border: 4px solid #ebebeb !important;
+}
+
+
+.optionHidden{
+    display:none;
+}
+
+
+
+
+
+
+.cell{
+    position: relative;
+}
+
+
+.mistakes, .mistakes input[type=number]{
+    background-color:#FF7E7E;
+}
+
+
+
+
+
+/* Removes arrows from inputs*/
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+.vr {
+    height:50px;
+}
+
+.navBtn{
+    border: none;
+    font-size:150%;
+    width:50%;
+    background-color:#B7F3F9;
+    font-family: "Noticia Text";
+}
+
+.navBtn:hover{
+    border: none;
+    width:50%;
+    background-color: white;
+    color: black;
+}
+
+.navbar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:#B7F3F9;
+    padding:10px;
+
+}
+
+
+.cont{
+  display: flex;
+  justify-content: center;
+}
+
+
+#startBtn{
+  background-color: white;
+  color: black;
+  border: 4px solid #d2f7dc; /* Green */
+  width:100%;
+  padding:30px;
+  border-radius: 8px;
+}
+
+#startBtn:hover{
+    background-color:#d2f7dc;
+    width:100%;
+    padding:30px;
+    border-radius: 8px;
+}
+
+#arrowBtn{
+    height:100%;
+}
+
+.modalText{
+    font-size:30px;
+}
+
+.modalConfirm{
+    color:black;
+    background-color:#d2f7dc;
+    width:100%;
+    border-radius: 8px;
+    border: 4px solid #d2f7dc; /* Green */
+}
+
+.modalConfirm:hover{
+    background-color: white;
+    color: black;
+    border: 4px solid #d2f7dc; /* Green */
+}
+
+.modalDeny{
+    color:black;
+    background-color:#FF7E7E;
+    width:100%;
+    border-radius: 8px;
+    border: 4px solid #FF7E7E;
+}
+
+.modalDeny:hover{
+    background-color: white;
+    color: black;
+    border: 4px solid #FF7E7E;
+}
+
+.modalNew{
+    color:black;
+    background-color:#A2FFC0;
+    width:100%;
+    border-radius: 8px;
+    border: 4px solid #A2FFC0;
+}
+
+.modalNew:hover{
+    background-color: white;
+    color: black;
+    border: 4px solid #A2FFC0;
+}
+
+.modalContinue{
+    color:black;
+    background-color:#FFBF7E;
+    width:100%;
+    border-radius: 8px;
+    border: 4px solid #FFBF7E;
+}
+
+.modalContinue:hover{
+    background-color: white;
+    color: black;
+    border: 4px solid #FFBF7E;
+}
+
+#sudokuTitle{
+    padding:10px
+}
+
+
+@media only screen and (max-device-width: 900px){
+  #undoBtn{
+        width:200%;
+        margin-right:40px;
+  }
+
+  #redoBtn{
+        width:200%;
+  }
+
+  #hintBtn{
+        width:200%;
+  }
+
+
+
+}
+
+@media only screen and (max-device-width: 1000px){
+    .vr{
+            display:none;
+    }
+
+    .navbar-toggler{
+            float:right;
+    }
+}
+
+@media only screen and (max-device-width: 1300px){
+    .vr{
+            margin-left:20px;
+      }
+}
+
+
+
+
+
+

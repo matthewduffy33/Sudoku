@@ -1,0 +1,446 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Game</title>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="style.css">
+
+        <script src="functions.js"></script>
+        <script src="generatingGrid.js"></script>
+        <script src="selectCell.js"></script>
+        <script src="undoAndRedo.js"></script>
+
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Over+the+Rainbow">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Delius">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text">
+
+    </head>
+
+
+    <body>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+
+        <!--start of navbar-->
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <div class="col-lg-1">
+                    <a id="sudokuTitle" class="navbar-brand" href="/sudoku"><h2>Sudoku</h2> </a>  <!--simple title that links back to home-->
+                </div>
+
+                <div class="vr my-auto"></div>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarPlay" aria-controls="navbarPlay" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>  
+                </button>
+
+
+                <div class="collapse navbar-collapse row" id="navbarPlay">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                        <div class="col-lg-2"> </div>
+                        <div class="col-lg-3">
+                            {{#if mistakes}} <!-- changes the text of the button based on if mistakes are showing or not -->
+
+                                <li class="nav-item"><button id="mistakeBtn" class="nav-link mx-auto btn navBtn px-auto" onclick="flipMistake()">Hide Mistakes</button></li>
+
+                            {{else}}
+
+                                <li class="nav-item"><button id="mistakeBtn" class="nav-link mx-auto btn navBtn px-auto" onclick="flipMistake()">Show Mistakes</button></li>
+
+                            {{/if}}
+                        </div>
+
+
+                        <div class="col-lg-3">
+
+                            <li class="nav-item">
+                                <!-- Makes the reset modal appear -->
+                                <button type="button" class="nav-link btn navBtn px-auto mx-auto"  data-bs-toggle="modal" data-bs-target="#resetModal">
+                                    Reset
+                                </button>
+                            </li>
+
+                        </div>
+
+
+                        <div class="col-lg-3">
+                            <li class="nav-item">
+                                <!-- Makes the new game modal appear -->
+                                <button type="button" class="nav-link btn navBtn px-auto mx-auto"  data-bs-toggle="modal" data-bs-target="#newGameModal">
+                                    New Game
+                                </button>
+
+                            </li>
+                        </div>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+
+
+        <!-- Reset Modal -->
+        <div class="modal fade" id="resetModal" tabindex="-1" aria-labelledby="restartModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5 modalText" id="restartModalLabel">Reset</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p class="modalText">Are you sure you wish to restart this game?</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-4"></div>
+
+                        <div class="col-lg-2">
+                            <form method="POST" action=""><!--sends a post request to reset the game-->
+                                <input type="hidden" name="option" value="reset">
+                                <input type="submit" class="btn btn-primary modalConfirm" value="Yes">
+                            </form>
+
+                        </div>
+
+                        <div class="col-lg-2"> <!--the no button closes the modal and continues the game-->
+                            <button type="button" class="btn btn-secondary modalDeny" data-bs-dismiss="modal">No</button>
+                        </div>
+
+                        <div class="col-lg-4"></div>
+                        <br><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- New Game Modal -->
+        <div class="modal fade" id="newGameModal" tabindex="-1" aria-labelledby="newModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5 modalText" id="newModalLabel">New Game</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p class="modalText">Are you sure you wish to start a new game?</p>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-lg-4"></div>
+
+                        <div class="col-lg-2">
+                            <form method="POST" action="">  <!--sends a post request to start a new game the game-->
+                                <input type="hidden" name="option" value="newGame">
+                                <input type="submit" class="btn btn-primary modalConfirm" value="Yes">
+                            </form>
+                        </div>
+
+                        <div class="col-lg-2"> <!--if no is selected then close modal and continue game-->
+                            <button type="button" class="btn btn-secondary modalDeny" data-bs-dismiss="modal">No</button>
+                        </div>
+
+                        <div class="col-lg-4"></div>
+                        <br><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Correct Modal -->
+        <div class="modal fade" id="correctModal" tabindex="-1" aria-labelledby="correctLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5 modalText" id="correctLabel">Well Done!</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p class="modalText">Congratulations! You finished the puzzle! Would you like to start a new puzzle?</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-4"></div>
+
+                        <div class="col-lg-2">  <!--sends a post request to start a new game-->
+                            <form method="POST" action="">
+                                <input type="hidden" name="option" value="newGame">
+                                <input type="submit" class="btn btn-primary modalConfirm" value="Yes">
+                            </form>
+                        </div>
+
+                        <div class="col-lg-2"> <!--if no then close modal-->
+                            <button type="button" class="btn btn-secondary modalDeny" data-bs-dismiss="modal">No</button>
+                        </div>
+
+                        <div class="col-lg-4"></div>
+                        <br><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Incorrect Modal -->
+        <div class="modal fade" id="incorrectModal" tabindex="-1" aria-labelledby="incorrectLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5 modalText" id="incorrectLabel">Incorrect!</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p class="modalText">Oh no! You got something wrong! Do you want to start a new game or keep going with this game?</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+
+                        <div class="col-lg-4">
+                            <form method="POST" action="">  <!--sends a post request to start a new game-->
+                                <input type="hidden" name="option" value="newGame">
+                                <input type="submit" class="btn btn-primary modalNew" value="New Game">
+                            </form>
+                        </div>
+
+                        <div class="col-lg-4">  <!--If no selected then close modal -->
+                            <button type="button" class="btn btn-secondary modalContinue" data-bs-dismiss="modal">Keep Going</button>
+                        </div>
+
+                        <div class="col-lg-2"></div>
+                        <br><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Error Modal -->
+        <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header"><!--Close modal-->
+                        <h1 class="modal-title fs-5 modalText" id="errorLabel">Error!</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p class="modalText">Oh no! Something has gone wrong with this function! Can't go any further!</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+
+        <div class="container-lg text-center">
+            <div class="row">
+                <div class="col-3">
+                </div>
+
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-2">
+
+                            {{#if undo}} <!--undo button highlighted-->
+                                <button id="undoBtn" onclick="this.disabled = true; undo(this)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                                        <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                                    </svg>
+                                </button>
+
+                            {{else}}<!--undo button not highlighted-->
+                                <button id="undoBtn" class="btn btn-secondary" onclick="this.disabled = true; undo(this)" disabled>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                                        <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                                    </svg>
+                                </button>
+                            {{/if}}
+                        </div>
+
+                        <div class="col-2">
+                            {{#if redo}}  <!--redo button highlighted-->
+                                <button id="redoBtn" class="btn btn-secondary" onclick="this.disabled = true; redo(this)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                                    </svg>
+                                </button>
+
+                            {{else}}  <!--redo button not highlighted-->
+                                <button id="redoBtn" class=" btn btn-secondary" onclick="this.disabled = true; redo(this)" disabled>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                                    </svg>
+                                </button>
+                            {{/if}}
+
+                        </div>
+
+                        <div class="col-5">
+                        </div>
+
+                        <div class="col-3"><!--hint button-->
+                            <button id="hintBtn" onclick="hint()">Hint </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-3">
+                </div>
+            </div>
+
+            <div id="tableDiv" class="row">
+
+                <div class="col-lg-3">
+                    <div id="optionSection" class="optionHidden card card-body"><!--Notes/options section-->
+                        <h2>Notes:</h2>
+                        <div class="mx-auto">
+                            <div class="row">
+                                <button class="optionBtn col-lg-3" id="option1" onclick="shiftOption(1)"> 1 </button>
+                                <button class="optionBtn col-lg-3" id="option2" onclick="shiftOption(2)"> 2 </button>
+                                <button class="optionBtn col-lg-3" id="option3" onclick="shiftOption(3)"> 3 </button>
+                            </div>
+
+                            <div class="row">
+                                <button class="optionBtn optionBtn col-lg-3" id="option4" onclick="shiftOption(4)"> 4 </button>
+                                <button class="optionBtn optionBtn col-lg-3" id="option5" onclick="shiftOption(5)"> 5 </button>
+                                <button class="optionBtn optionBtn col-lg-3" id="option6" onclick="shiftOption(6)"> 6 </button>
+                            </div>
+
+                            <div class="row">
+                                <button class="optionBtn optionBtn col-lg-3" id="option7" onclick="shiftOption(7)"> 7 </button>
+                                <button class="optionBtn optionBtn col-lg-3" id="option8" onclick="shiftOption(8)"> 8 </button>
+                                <button class="optionBtn optionBtn col-lg-3" id="option9" onclick="shiftOption(9)"> 9 </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div>
+                        <table id="pager" class="wp-list-table widefat striped posts">
+
+                            <tbody>
+
+                                {{#each start}} <!--loops through startgrid's outer array-->
+
+
+                                    <tr>
+                                        <script> setIndex({{@index}});</script>  <!--sets the index of the outer array-->
+
+                                        <!--loops through startgrid's inner array-->
+                                        {{#each this}}
+
+                                            {{#unless this}} <!--if space is null then-->
+
+                                                <!--creates cell-->
+                                                <td class="cell sudokuCellNumber" id="x{{@index}}y" onmouseover="hoverOver(this)" onmouseout="hoverOut(this)">
+
+                                                    <p class="options" id="Optionx{{@index}}y"></p>
+
+                                                    <input id="Numx{{@index}}y" type="number" min="1" max="9" oninput="maxLengthCheck(this)">
+
+                                                </td>
+
+                                                <script>changeID({{@index}});</script><!--changes the id of the above grid-->
+
+                                            {{else}}
+
+                                                <!--sets the start numbers (ones that cannot be changed)-->
+                                                <td class="cell sudokuCell val{{this}}" id="x{{@index}}y{{@../index}}" onmouseover="hoverOver(this)" onmouseout="hoverOut(this)">
+                                                    <strong>{{this}}</strong>
+                                                </td>
+
+                                            {{/unless}}
+
+                                        {{/each}}
+                                    </tr>
+                                {{/each}}
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3">
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+
+        {{#each playerboard}}   <!--loops through player moves-->
+            <script>setIndex({{@index}});</script><!--sets the index of the outer array-->
+
+            {{#each this}}
+                {{#if this}}
+                    <script>valuesSet({{this}}, {{@index}})</script>  <!--sets the values of the player moves-->
+                {{/if}}
+
+            {{/each}}
+
+        {{/each}}
+
+        <script>gridBorders();</script>  <!--sets the borders of the table-->
+
+
+        {{#if showMistakes}}  <!--if mistakes are being shown then loop through the mistakes made and highlight them-->
+            {{#each mistakes}}
+                <script>mistakeShow('{{this}}');</script>
+            {{/each}}
+
+        {{/if}}
+
+        {{#each options}} <!--Loops through the options and sets them to the grid-->
+            {{#each this}}
+                <script>clickGrid('{{@index}}', '{{@../index}}', {{this}});</script>
+            {{/each}}
+        {{/each}}
+
+
+        {{#if x}}  <!--if a cell was selected before then select it again in this new reload-->
+            <script>selecting({{x}},{{y}});</script>
+            {{x}},{{y}}
+        {{/if}}
+        <br><br><br><br><br><br><br><br>
+
+
+    </body>
+</html>
