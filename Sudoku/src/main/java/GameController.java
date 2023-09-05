@@ -156,13 +156,22 @@ public class GameController {
     }
 
     @GET("/play/hint")
-    public JSONObject hint(){
+    public JSONObject hint() throws FileNotFoundException {
 
         JSONObject hint = playerBoard.hint(start.getGrid(), seed.getGrid());  //gets the hint
 
         if(playerBoard.completed(start.getGrid())){  //if the hint causes the grid to be complete then check if the grid is correct or not
             hint.put("correct",playerBoard.correct(start.getGrid(), seed.getGrid()));
         }
+
+        List<String> data =new ArrayList<>();
+
+        int x = (int) hint.get("x");
+        int y = (int) hint.get("y");
+        int value = (int) hint.get("value");
+
+        data.add("addValue"+ " "+ x +" "+ y +" "+ value);
+        writeToFile(data, movesFile);
 
         return hint;
 

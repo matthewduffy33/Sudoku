@@ -110,6 +110,10 @@ function optionsSet(x, y){ //takes the option values stored in the option sectio
 
 
 function hint(){
+
+    hideRedo(); //if a letter is added then a redo should not be possible and an undo should be
+    showUndo();
+
     var xhttp = new XMLHttpRequest();
 
     xhttp.onload = function() {
