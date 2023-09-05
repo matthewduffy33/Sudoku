@@ -10,26 +10,27 @@ function addLetter(x, y){
 
     var value = document.getElementById("Num"+"x"+x+"y"+y).value; //get the value from the input box
 
-    var pos = document.getElementById("x"+x+"y"+y).className.search("val");
+    var pos = document.getElementById("x"+x+"y"+y).className.search("val");  //checks if value is already in cell
+
     if(pos!=-1){
-            var val = document.getElementById("x"+x+"y"+y).className[pos+3];
-            unhighlightChanged(val, x, y);
-            document.getElementById("x"+x+"y"+y).classList.remove("val"+val);
+            var val = document.getElementById("x"+x+"y"+y).className[pos+3];  //gets the value of the previous number in cell
+            unhighlightChanged(val, x, y);  //unhighlight the old number
+            document.getElementById("x"+x+"y"+y).classList.remove("val"+val);  //remove reference to old number
 
     }
 
 
-    highlightChanged(value);
+    highlightChanged(value);  //highlight the new number
 
     if(value != ""){
-        if(document.getElementById("Option"+"x"+x+"y"+y)){
+        if(document.getElementById("Option"+"x"+x+"y"+y)){ //remove the options from showing
             document.getElementById("Option"+"x"+x+"y"+y).innerHTML="";
         }
 
-        document.getElementById("optionSection").classList.add("optionHidden");
+        document.getElementById("optionSection").classList.add("optionHidden");  //hide the options/notes tab
         document.getElementById("x"+x+"y"+y).classList.add("val"+value);
 
-    }else{
+    }else{ //if removing number then put the options back
         getOptions(x, y)
     }
 

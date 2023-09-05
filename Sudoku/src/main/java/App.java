@@ -13,7 +13,7 @@ public class App extends Jooby {
 
 
         try {
-            mvc(new GameController("files/moves.txt", "files/redo.txt"));
+            mvc(new GameController("Sudoku/files/moves.txt", "Sudoku/files/redo.txt"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -38,23 +38,23 @@ public class App extends Jooby {
     }
 
     {
-        assets("/sudoku/style.css", "public/style.css");
+        assets("/sudoku/style.css", "Sudoku/public/style.css");
     }
 
     {
-        assets("/sudoku/functions.js", "public/functions.js");
+        assets("/sudoku/functions.js", "Sudoku/public/functions.js");
     }
 
     {
-        assets("/sudoku/generatingGrid.js", "public/generatingGrid.js");
+        assets("/sudoku/generatingGrid.js", "Sudoku/public/generatingGrid.js");
     }
 
     {
-        assets("/sudoku/selectCell.js", "public/selectCell.js");
+        assets("/sudoku/selectCell.js", "Sudoku/public/selectCell.js");
     }
 
     {
-        assets("/sudoku/undoAndRedo.js", "public/undoAndRedo.js");
+        assets("/sudoku/undoAndRedo.js", "Sudoku/public/undoAndRedo.js");
     }
 
 }
