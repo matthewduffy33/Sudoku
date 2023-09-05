@@ -6,12 +6,15 @@ Lots of apps and websites have a very cluttered and confusing look and I wanted 
 So I wanted to have a stripped back and simple design.
 
 Board:
+
 ![image](https://github.com/matthewduffy33/Sudoku/assets/105711454/24693c5b-1dd6-4ec4-a9dc-fb45e5533b42)
 
 NavBar:
+
 ![image](https://github.com/matthewduffy33/Sudoku/assets/105711454/51d5413d-b1e5-4498-b2cb-11bb783b6289)
 
-Home Page
+Home Page:
+
 ![image](https://github.com/matthewduffy33/Sudoku/assets/105711454/9c90f2b6-c3e6-4dca-9508-e684716414a5)
 
 The game highlights where the mouse is hovering over as well as highlighting the row, column, block and numbers that are the same
