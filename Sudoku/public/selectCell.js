@@ -1,6 +1,6 @@
 document.onkeydown = checkKey;
 
-function checkKey() {
+function checkKey() {  //allows movement with arrow keys
 
     var arrow = window.event;
 
@@ -28,14 +28,11 @@ function upArrow(){
     var x = parseInt(selected.id.substring(1,2));
     var y = parseInt(selected.id.substring(3));
 
-
-
-    if(y>0){
-        document.getElementById("x"+x+"y"+y).classList.remove("selected");
+    if(y>0){   //checks you do not go out of bounds
+        document.getElementById("x"+x+"y"+y).classList.remove("selected"); //unselect previous
         unhighlight(x, y, "Selected");
 
-
-        selecting(x, y-1)
+        selecting(x, y-1)  //select new
     }
 }
 
@@ -45,13 +42,11 @@ function downArrow(){
     var x = parseInt(selected.id.substring(1,2));
     var y = parseInt(selected.id.substring(3));
 
-
-
-    if(y<8){
-        document.getElementById("x"+x+"y"+y).classList.remove("selected");
+    if(y<8){  //checks you do not go out of bounds
+        document.getElementById("x"+x+"y"+y).classList.remove("selected"); //unselect previous
         unhighlight(x, y, "Selected");
 
-        selecting(x, y+1)
+        selecting(x, y+1);  //select new
     }
 }
 
@@ -61,13 +56,11 @@ function leftArrow(){
     var x = parseInt(selected.id.substring(1,2));
     var y = parseInt(selected.id.substring(3));
 
-
-
-    if(x>0){
+    if(x>0){   //checks you do not go out of bounds
         unhighlight(x, y, "Selected");
-        document.getElementById("x"+x+"y"+y).classList.remove("selected");
+        document.getElementById("x"+x+"y"+y).classList.remove("selected");  //unselect previous
 
-        selecting(x-1, y)
+        selecting(x-1, y);  //select new
     }
 }
 
@@ -76,14 +69,11 @@ function rightArrow(){
     var x = parseInt(selected.id.substring(1,2));
     var y = parseInt(selected.id.substring(3));
 
-
-
-    if(x<8){
-        document.getElementById("x"+x+"y"+y).classList.remove("selected");
+    if(x<8){  //checks you do not go out of bounds
+        document.getElementById("x"+x+"y"+y).classList.remove("selected"); //unselect previous
         unhighlight(x, y, "Selected");
 
-
-        selecting(x+1, y)
+        selecting(x+1, y);  //select new
     }
 }
 
@@ -92,7 +82,7 @@ function rightArrow(){
 
 function newSelect(x, y){
     var prev = document.querySelectorAll(".selected");
-    for (i = 0; i < prev.length; i++) {
+    for (i = 0; i < prev.length; i++) {  //remove previously selected
 
         prevX = prev[i].id.substring(1,2);
         prevY = prev[i].id.substring(3);
@@ -103,7 +93,7 @@ function newSelect(x, y){
 
     }
 
-    selecting(x, y);
+    selecting(x, y); //select new
 }
 
 
@@ -111,7 +101,7 @@ function unselect(prev){
     var x;
     var y;
 
-    for(let i=0; i<9; i++){
+    for(let i=0; i<9; i++){  //finds position of previous x y and unhighlight it
             if(prev.classList.includes("col"+i)){
                 x=i;
             }else if(prev.classList.includes("row"+i)){
@@ -123,58 +113,63 @@ function unselect(prev){
 
 }
 
-function hoverOver(elem){
+
+function hoverOver(elem){  //highlight current hoverable
     elem.classList.add("hoverSelect");
-     highlight(elem.id.substring(1,2), elem.id.substring(3), "");
+    highlight(elem.id.substring(1,2), elem.id.substring(3), "");
 }
 
-function hoverOut(elem){
+
+function hoverOut(elem){  //unhighlight previous hoverable
     elem.classList.remove("hoverSelect");
     unhighlight(elem.id.substring(1,2), elem.id.substring(3), "");
 
 }
 
+
 function highlight(x, y, selected){
-    var rows = document.querySelectorAll(".row"+y);
+    var rows = document.querySelectorAll(".row"+y);  //highlighting everything in a row
     for (let i = 0; i < rows.length; i++) {
         rows[i].classList.add("hover"+selected);
     }
 
-    var col = document.querySelectorAll(".col"+x);
+    var col = document.querySelectorAll(".col"+x);  //highlighting everything in a column
     for (i = 0; i < col.length; i++) {
         col[i].classList.add("hover"+selected);
     }
 
     var blockNum = Math.floor(x/3)+ 3*Math.floor(y/3);
 
-    var block = document.querySelectorAll(".block"+ blockNum);
+    var block = document.querySelectorAll(".block"+ blockNum);   //highlighting everything in a block
     for (i = 0; i < block.length; i++) {
         block[i].classList.add("hover"+selected);
     }
 
     var elem = document.getElementById("x"+x+"y"+y);
 
-    if(!elem.classList.contains("sudokuCellNumber")){
+    if(!elem.classList.contains("sudokuCellNumber")){  //gets the value of selected grid
         var val = parseInt(elem.innerHTML.replace(/^\D+/g, ''));
 
     }else{
         var val = document.getElementById("Numx"+x+"y"+y).value;
+
     }
 
     var values = document.querySelectorAll(".val"+ val);
-    for (i = 0; i < values.length; i++) {
+    for (i = 0; i < values.length; i++) {  //highlighting everything of the same value
         values[i].classList.add("hover"+selected);
     }
 
 }
 
+
 function unhighlight(x, y, selected){
-    var rows = document.querySelectorAll(".row"+y);
+    var rows = document.querySelectorAll(".row"+y);  //unhighlighting everything in a row
         for (let i = 0; i < rows.length; i++) {
             rows[i].classList.remove("hover"+selected);
         }
 
-        var col = document.querySelectorAll(".col"+x);
+        var col = document.querySelectorAll(".col"+x);  //highlighting everything in a column
         for (i = 0; i < col.length; i++) {
             col[i].classList.remove("hover"+selected);
         }
@@ -182,14 +177,14 @@ function unhighlight(x, y, selected){
         var blockNum = Math.floor(x/3)+ 3*Math.floor(y/3);
 
 
-        var block = document.querySelectorAll(".block"+ blockNum);
+        var block = document.querySelectorAll(".block"+ blockNum);   //unhighlighting everything in a block
         for (i = 0; i < block.length; i++) {
             block[i].classList.remove("hover"+selected);
         }
 
         var elem = document.getElementById("x"+x+"y"+y);
 
-        if(!elem.classList.contains("sudokuCellNumber")){
+        if(!elem.classList.contains("sudokuCellNumber")){   //gets the value of selected grid
             var val = parseInt(elem.innerHTML.replace(/^\D+/g, ''));
 
         }else{
@@ -198,8 +193,19 @@ function unhighlight(x, y, selected){
 
         var values = document.querySelectorAll(".val"+ val);
 
-        for (i = 0; i < values.length; i++) {
+        for (i = 0; i < values.length; i++) {   //unhighlighting everything with the same value
             values[i].classList.remove("hover"+selected);
+        }
+
+}
+
+
+function highlightChanged(val){
+
+        var values = document.querySelectorAll(".val"+ val);
+        for (i = 0; i < values.length; i++) {       //selected everything of the new changed val
+            values[i].classList.add("hoverSelected");
+
         }
 
 }
@@ -211,20 +217,10 @@ function unhighlightChanged(val, x, y){
         var blockNum = Math.floor(x/3)+ 3*Math.floor(y/3);
 
         for (i = 0; i < values.length; i++) {
-            if(!values[i].classList.contains("row"+y) && !values[i].classList.contains("col"+x) && !values[i].classList.contains("block"+blockNum)){
+            if(!values[i].classList.contains("row"+y) && !values[i].classList.contains("col"+x) && !values[i].classList.contains("block"+blockNum)){  //if not in the same, row, col or block deselect it
                 values[i].classList.remove("hoverSelected");
                 values[i].classList.remove("hover");
             }
-        }
-
-}
-
-function highlightChanged(val){
-
-        var values = document.querySelectorAll(".val"+ val);
-        for (i = 0; i < values.length; i++) {
-                values[i].classList.add("hoverSelected");
-
         }
 
 }

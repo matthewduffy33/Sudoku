@@ -1,26 +1,44 @@
-function showUndo() {
+function showUndo() {  //shows undo button
     if(document.getElementById("undoBtn").disabled){
         document.getElementById("undoBtn").disabled = false;
 
     }
 }
 
+
+function showRedo(){   //shows redo button
+    if(document.getElementById("redoBtn").disabled){
+        document.getElementById("redoBtn").disabled = false;
+
+    }
+
+}
+
+function hideRedo(){   //hides redo button
+    if(document.getElementById("redoBtn").disabled == false){
+        document.getElementById("redoBtn").disabled = true;
+
+    }
+}
+
+
+
 function undo(btn){
 
     var xhttp = new XMLHttpRequest();
 
     xhttp.onload = function() {
-        if(xhttp.responseText == "error"){
+        if(xhttp.responseText == "error"){ //if error with undo then show error modal
            var errorModal = new bootstrap.Modal(document.getElementById("errorModal"))
            errorModal.show();
-        }else{
 
+        }else{
             var response = JSON.parse(xhttp.responseText);
             responseHandler(response);
 
-            checkUndo();
+            checkUndo();//checks if there is still an undo and shows a redo
             showRedo();
-            mistakeHide("x"+response["index0"]["x"] + "y"+response["index0"]["y"]);
+            mistakeHide("x"+response["index0"]["x"] + "y"+response["index0"]["y"]); //hide any mistakes made on undone cell
 
         }
         btn.disabled = false;
@@ -36,7 +54,7 @@ function redo(btn){
     var xhttp = new XMLHttpRequest();
 
     xhttp.onload = function() {
-        if(xhttp.responseText == "error"){
+        if(xhttp.responseText == "error"){  //if error with undo then show error modal
             var errorModal = new bootstrap.Modal(document.getElementById("errorModal"))
             errorModal.show();
         }else{
@@ -44,10 +62,10 @@ function redo(btn){
             var response = JSON.parse(xhttp.responseText);
             responseHandler(response);
 
-            showUndo();
+            showUndo();  //checks if there is still a redo and shows an undo
             checkRedo();
 
-            if(document.getElementById("mistakeBtn").innerText=="Hide Mistakes"){
+            if(document.getElementById("mistakeBtn").innerText=="Hide Mistakes"){  //hide any mistakes made on undone cell
                 mistakeShow("x"+response["index0"]["x"] + "y"+response["index0"]["y"]);
             }
 
@@ -62,10 +80,11 @@ function redo(btn){
 
 
 function responseHandler(response){
-    for (res in response){
+    for (res in response){  //loop through response
         var x = response[res]["x"];
         var y = response[res]["y"];
 
+        //for whichever type it is do the action
         if(response[res]["type"]=="addValue"){
             document.getElementById("Numx"+x+"y"+y).value = response[res]["value"];
             document.getElementById("Optionx"+x+"y"+y).innerHTML=""
@@ -93,7 +112,7 @@ function responseHandler(response){
 }
 
 
-function checkUndo(){
+function checkUndo(){  //checks if there is something to undo
     var xhttp = new XMLHttpRequest();
 
     xhttp.onload = function() {
@@ -106,7 +125,7 @@ function checkUndo(){
     xhttp.send();
 }
 
-function checkRedo(){
+function checkRedo(){  //checks if there is something to redo
     var xhttp = new XMLHttpRequest();
 
     xhttp.onload = function() {
@@ -120,17 +139,3 @@ function checkRedo(){
 }
 
 
-function showRedo(){
-    if(document.getElementById("redoBtn").disabled){
-        document.getElementById("redoBtn").disabled = false;
-
-    }
-
-}
-
-function hideRedo(){
-    if(document.getElementById("redoBtn").disabled == false){
-        document.getElementById("redoBtn").disabled = true;
-
-    }
-}
