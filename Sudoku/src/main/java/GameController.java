@@ -45,63 +45,61 @@ public class GameController {
     } //displays html welcome page
 
     @GET("/play")
-    public ModelAndView play()  {
+    public ModelAndView play(@QueryParam String option) throws FileNotFoundException {
 
-        ModelAndView play = new ModelAndView("game.hbs").put("start", start.getGrid()); //uses handlebars to display the grid and other details
+        if(option!=null) {  //if either a new game or reset
+            switch (option) {
+                case "newGame":   //if new game then reset everything
+                    seed = new Seed();
 
-        play.put("playerboard", playerBoard.getGrid());
+                    seed.generateGrid();
 
-        play.put("options", playerBoard.getOptions());
+                    start.generate(seed.getGrid());
 
-        if(showMistakes){ //if the player wishes to view mistakes then their mistakes are loaded and sent to the handlebars file
-            ArrayList<String> mistakes= playerBoard.mistakesArray(seed.getGrid());
-            play.put("mistakes", mistakes);
-            play.put("showMistakes", true);
+                    playerBoard.setGrid(start.getGrid());
+                    playerBoard.clear();
+                    playerBoard.resetOptions();
+
+                    refreshFile(movesFile);
+                    refreshFile(redoFile);
+
+                    break;
+
+                case "reset":  //if reset then clear the moves and options the player has made
+
+                    playerBoard.clear();
+                    playerBoard.resetOptions();
+
+                    refreshFile(movesFile);
+                    refreshFile(redoFile);
+
+                    break;
+            }
         }
+            ModelAndView play = new ModelAndView("game.hbs").put("start", start.getGrid()); //uses handlebars to display the grid and other details
 
-        play.put("undo", moveExists(movesFile));  //checks if an undo can happen
+            play.put("playerboard", playerBoard.getGrid());
 
-        play.put("redo", moveExists(redoFile));  //checks if a redo undo can happen
+            play.put("options", playerBoard.getOptions());
 
-        return play;
+            if(showMistakes){ //if the player wishes to view mistakes then their mistakes are loaded and sent to the handlebars file
+                ArrayList<String> mistakes= playerBoard.mistakesArray(seed.getGrid());
+                play.put("mistakes", mistakes);
+                play.put("showMistakes", true);
+            }
+
+            play.put("undo", moveExists(movesFile));  //checks if an undo can happen
+
+            play.put("redo", moveExists(redoFile));  //checks if a redo undo can happen
+
+            return play;
+
+
     }
 
 
 
-    @POST("/play")
-    public ModelAndView formPlay(@FormParam String option) throws IOException { //version of play that deals with functions that change the state of the game completely
 
-        switch (option) {
-            case "newGame":   //if new game then reset everything
-                seed = new Seed();
-
-                seed.generateGrid();
-
-                start.generate(seed.getGrid());
-
-                playerBoard.setGrid(start.getGrid());
-                playerBoard.clear();
-                playerBoard.resetOptions();
-
-                refreshFile(movesFile);
-                refreshFile(redoFile);
-
-                break;
-
-            case "reset":  //if reset then clear the moves and options the player has made
-
-                playerBoard.clear();
-                playerBoard.resetOptions();
-
-                refreshFile(movesFile);
-                refreshFile(redoFile);
-
-                break;
-        }
-
-        return play();
-
-    }
 
 
     @GET("/play/add")  //adding a value to board and returns a json string

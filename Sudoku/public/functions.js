@@ -2,6 +2,9 @@ var ongoingFunction = false;
 var currentX;
 var currentY;
 
+window.history.replaceState(null, '', window.location.pathname);  //removes any remaining requests on header
+
+
 
 function addLetter(x, y){
 
