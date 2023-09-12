@@ -256,6 +256,18 @@ function newOptions(options){
 }
 
 
+function newOpt(x, y, options){
+    document.getElementById("Optionx"+x+"y"+y).innerHTML=""; //clears options
+
+    if(options.length<9){
+        for (let i = 0; i < options.length; i++) {  //adds the options based on array
+            document.getElementById("Optionx"+x+"y"+y).innerHTML+=options[i] +" ";
+
+        }
+    }
+
+}
+
 function selecting(x, y){   //selects and highlights appropriate cell
     if(document.getElementById("x"+x+"y"+ y).classList.contains("sudokuCellNumber")){ //if not a value that was set at the start
         document.getElementById("Numx"+x+"y"+y).select(); //select the inputbox

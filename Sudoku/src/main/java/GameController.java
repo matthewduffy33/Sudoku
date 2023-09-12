@@ -255,7 +255,7 @@ public class GameController {
     public String changeFile(String sourceFile, String destinationFile, Boolean flip) {
         String fullLine;
         String initialType = null;
-        String type = null;
+        String type ;
 
         int x = 0;
         int y = 0;
@@ -263,7 +263,7 @@ public class GameController {
 
         String[] splitMoveDetails;
         boolean options =true;
-        JSONObject overallJSON = new JSONObject();
+        JSONObject result = new JSONObject();
         List<String> fileData = new ArrayList<>();
 
         List<String> redoData = new ArrayList<>();
@@ -279,12 +279,12 @@ public class GameController {
 
                 splitMoveDetails = fullLine.split(" ");  //reads in the line and splits it by spaces
 
-                JSONObject innerJSON = new JSONObject();
+
 
 
                 if (splitMoveDetails.length != 4) {  //if not of the correct size then error occurred
 
-                    if(overallJSON.isEmpty()){  //if the json string is empty (no moves already extracted) then return error otherwise return whatever moves have already been found
+                    if(result.isEmpty()){  //if the json string is empty (no moves already extracted) then return error otherwise return whatever moves have already been found
                         return "error";
                     }else{
                         break;
@@ -302,54 +302,60 @@ public class GameController {
                             return "error";
                         }
 
-                        if(flip){  //if you are meant to flip the type then flip it
-                            type = flipType(initialType);
-                        }else{
-                            type=initialType;
-                        }
                     }
 
 
-                    //after the first loop checks that x and y coordinates are still the same and that the type is the same as the type initially
-                    if(index>0 && (!initialType.equals(splitMoveDetails[0]) || x != Integer.parseInt(splitMoveDetails[1]) || y != Integer.parseInt(splitMoveDetails[2]))){
+                    //after the first loop checks that x and y coordinates are still the same and that the type is still just changing an option
+                    if(index>0 && ((!splitMoveDetails[0].contains("Option")) || x != Integer.parseInt(splitMoveDetails[1]) || y != Integer.parseInt(splitMoveDetails[2]))){
                         fileData.add(fullLine); //if not then time to stop
                         break;
                     }
 
+                    if(flip){  //if you are meant to flip the type then flip it
+                        type = flipType(splitMoveDetails[0]);
+                    }else{
+                        type=splitMoveDetails[0];
+                    }
+
                     value = Integer.parseInt(splitMoveDetails[3]);  //get the value of the change
 
+                    if(!result.isEmpty()){
+                        result = new JSONObject();
+                    }
 
                     switch (type) {
                         case "removeOption":
 
-                            innerJSON.put("type", "removeOption");
-                            innerJSON.put("options", playerBoard.removeOption(x, y, value)); //puts the result in a json format and wraps it within another json object
-                            overallJSON = insertJSON(x, y, value, index, innerJSON, overallJSON);
+                            result = insertJSON(x, y,"changeOptions", result);
+                            result.put("options", playerBoard.removeOption(x, y, value)); //puts the result in a json format and wraps it within another json object
 
                             break;
+
                         case "addOption":
 
-                            innerJSON.put("type", "addOption");
-                            innerJSON.put("options", playerBoard.addOption(x, y, value));  //puts the result in a json format and wraps it within another json object
-                            overallJSON = insertJSON(x, y, value, index, innerJSON, overallJSON);
+                            result = insertJSON(x, y,"changeOptions", result);
+                            result.put("options", playerBoard.addOption(x, y, value));  //puts the result in a json format and wraps it within another json object
 
                             break;
+
                         case "removeValue":
 
                             options = false;//not changing options so no need to keep looping
                             playerBoard.removeValue(x, y);
-                            innerJSON.put("type", "removeValue");  //puts the result in a json format and wraps it within another json object
-                            overallJSON = insertJSON(x, y, value, index, innerJSON, overallJSON);
+                            result = insertJSON(x, y,"removeValue", result);
+                            result.put("value", value);
 
                             break;
+
                         case "addValue":
 
                             options = false;//not changing options so no need to keep looping
                             playerBoard.addValue(x, y, value);
-                            innerJSON.put("type", "addValue");
-                            overallJSON = insertJSON(x, y, value, index, innerJSON, overallJSON);  //puts the result in a json format and wraps it within another json object
+                            result = insertJSON(x, y,"addValue", result);
+                            result.put("value", value);
 
                             break;
+
                         default:  //not a valid type so error occurred
                             return "error";
 
@@ -372,6 +378,8 @@ public class GameController {
 
             writeToFile(fileData, sourceFile);   //puts the unprocessed lines back in the source file
 
+            redoData= flipFile(redoData);  //reverses the data before putting in file
+
             writeToFile(redoData, destinationFile);  //puts the processed lines in the source file
 
 
@@ -380,10 +388,35 @@ public class GameController {
 
         }
 
-        return overallJSON.toString();
+        System.out.println(result.toString());
+        return result.toString();
     }
 
 
+    public JSONObject insertJSON(int x, int y, String type,  JSONObject innerJSON){
+        innerJSON.put("x", x);
+        innerJSON.put("y", y);
+        innerJSON.put("type", type);
+
+        return innerJSON;
+    }
+
+
+    public List<String> flipFile(List<String> fileData){
+        System.out.println(fileData);
+        if (fileData.size() <= 1 || fileData == null) {
+            return fileData;
+        }
+
+        String value = fileData.remove(0);
+
+        fileData=flipFile(fileData);
+
+        fileData.add(value);
+
+
+        return fileData;
+    }
 
     public String flipType(String type){  //swaps the adds to removes and vice versa
         switch (type) {
@@ -403,15 +436,6 @@ public class GameController {
     }
 
 
-
-    public JSONObject insertJSON(int x, int y, int value, int index, JSONObject innerJSON, JSONObject overallJSON){
-        innerJSON.put("x", x);
-        innerJSON.put("y", y);
-        innerJSON.put("value", value);
-        overallJSON.put("index"+index, innerJSON);
-
-        return overallJSON;
-    }
 
 
 
