@@ -1,16 +1,1 @@
-addValue 0 0 1
-addValue 4 0 2
-addValue 5 0 3
-addValue 6 0 2
-addValue 6 0 3
-
-
-
-
-
-
-
-
-
-
 

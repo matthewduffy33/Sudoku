@@ -388,7 +388,6 @@ public class GameController {
 
         }
 
-        System.out.println(result.toString());
         return result.toString();
     }
 
@@ -402,8 +401,7 @@ public class GameController {
     }
 
 
-    public List<String> flipFile(List<String> fileData){
-        System.out.println(fileData);
+    public List<String> flipFile(List<String> fileData){ //reverse file
         if (fileData.size() <= 1 || fileData == null) {
             return fileData;
         }
