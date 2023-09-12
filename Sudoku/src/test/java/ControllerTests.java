@@ -52,35 +52,62 @@ public class ControllerTests {
 
     }
 
+
+
+    @Test
+    public void flipFileNull() throws FileNotFoundException {
+        String file = "src/test/files/testMoves.txt";
+
+        GameController gameController = new GameController(file, file);
+
+        assertEquals("[]", gameController.flipFile(new ArrayList<>()).toString());
+
+    }
+
+    @Test
+    public void flipFileOne() throws FileNotFoundException {
+        String file = "src/test/files/testMoves.txt";
+
+        GameController gameController = new GameController(file, file);
+
+        List<String> fileData = new ArrayList<String>();
+        fileData.add("a");
+
+
+        assertEquals("[a]", gameController.flipFile(fileData).toString());
+
+    }
+
+    @Test
+    public void flipFileMultiple() throws FileNotFoundException {
+        String file = "src/test/files/testMoves.txt";
+
+        GameController gameController = new GameController(file, file);
+
+        List<String> fileData = new ArrayList<String>();
+        fileData.add("a");
+        fileData.add("b");
+        fileData.add("c");
+
+
+        assertEquals("[c, b, a]", gameController.flipFile(fileData).toString());
+
+    }
+
+
     @Test
     public void jsonInsertOne() throws FileNotFoundException {
         String file = "src/test/files/testMoves.txt";
 
         GameController gameController = new GameController(file, file);
 
-        JSONObject innerJSON = new JSONObject();
-        JSONObject overallJSON = new JSONObject();
+        JSONObject jsonString = new JSONObject();
 
-        assertEquals("{\"index1\":{\"x\":1,\"y\":1,\"value\":1}}", gameController.insertJSON(1, 1, 1, 1, innerJSON, overallJSON).toString());
-
-    }
-
-    @Test
-    public void jsonInsertMultiple() throws FileNotFoundException {
-        String file = "src/test/files/testMoves.txt";
-
-        GameController gameController = new GameController(file, file);
-
-        JSONObject innerJSON = new JSONObject();
-        JSONObject overallJSON = new JSONObject();
-
-        assertEquals("{\"index1\":{\"x\":1,\"y\":1,\"value\":1}}", gameController.insertJSON(1, 1, 1, 1, innerJSON, overallJSON).toString());
-        assertEquals("{\"index1\":{\"x\":2,\"y\":2,\"value\":2},\"index2\":{\"x\":2,\"y\":2,\"value\":2}}", gameController.insertJSON(2, 2, 2, 2, innerJSON, overallJSON).toString());
-        assertEquals("{\"index1\":{\"x\":3,\"y\":3,\"value\":3},\"index2\":{\"x\":3,\"y\":3,\"value\":3},\"index3\":{\"x\":3,\"y\":3,\"value\":3}}", gameController.insertJSON(3, 3, 3, 3, innerJSON, overallJSON).toString());
-        assertEquals("{\"index1\":{\"x\":4,\"y\":4,\"value\":4},\"index2\":{\"x\":4,\"y\":4,\"value\":4},\"index3\":{\"x\":4,\"y\":4,\"value\":4},\"index4\":{\"x\":4,\"y\":4,\"value\":4}}", gameController.insertJSON(4, 4, 4, 4, innerJSON, overallJSON).toString());
-        assertEquals("{\"index1\":{\"x\":5,\"y\":5,\"value\":5},\"index2\":{\"x\":5,\"y\":5,\"value\":5},\"index3\":{\"x\":5,\"y\":5,\"value\":5},\"index4\":{\"x\":5,\"y\":5,\"value\":5},\"index5\":{\"x\":5,\"y\":5,\"value\":5}}", gameController.insertJSON(5, 5, 5, 5, innerJSON, overallJSON).toString());
+        assertEquals("{\"x\":1,\"y\":1,\"type\":\"changeOptions\"}", gameController.insertJSON(1, 1, "changeOptions", jsonString).toString());
 
     }
+
+
 
 
 
@@ -221,7 +248,7 @@ public class ControllerTests {
 
 
 
-        assertEquals( "{\"index0\":{\"type\":\"addValue\",\"x\":3,\"y\":4,\"value\":5}}", gameController.changeFile(file, destination, false));
+        assertEquals( "{\"x\":3,\"y\":4,\"type\":\"addValue\",\"value\":5}", gameController.changeFile(file, destination, false));
 
         Scanner reader = new Scanner(new File(file));
         String fullLine;
@@ -262,7 +289,7 @@ public class ControllerTests {
 
 
 
-        assertEquals( "{\"index0\":{\"type\":\"removeValue\",\"x\":3,\"y\":4,\"value\":5}}", gameController.changeFile(file, destination, true));
+        assertEquals( "{\"x\":3,\"y\":4,\"type\":\"removeValue\",\"value\":5}", gameController.changeFile(file, destination, true));
 
         Scanner reader = new Scanner(new File(file));
         String fullLine;
@@ -302,7 +329,7 @@ public class ControllerTests {
 
 
 
-        assertEquals( "{\"index0\":{\"type\":\"removeValue\",\"x\":3,\"y\":4,\"value\":5}}", gameController.changeFile(file, destination, false));
+        assertEquals( "{\"x\":3,\"y\":4,\"type\":\"removeValue\",\"value\":5}", gameController.changeFile(file, destination, false));
 
         Scanner reader = new Scanner(new File(file));
         String fullLine;
@@ -341,7 +368,7 @@ public class ControllerTests {
 
 
 
-        assertEquals( "{\"index0\":{\"type\":\"addValue\",\"x\":3,\"y\":4,\"value\":5}}", gameController.changeFile(file, destination, true));
+        assertEquals( "{\"x\":3,\"y\":4,\"type\":\"addValue\",\"value\":5}", gameController.changeFile(file, destination, true));
 
         Scanner reader = new Scanner(new File(file));
         String fullLine;
@@ -380,7 +407,7 @@ public class ControllerTests {
 
 
 
-        assertEquals( "{\"index0\":{\"type\":\"addOption\",\"options\":[1,2,3,4,5,6,7,8,9],\"x\":3,\"y\":4,\"value\":5},\"index1\":{\"type\":\"addOption\",\"options\":[1,2,3,4,5,6,7,8,9],\"x\":3,\"y\":4,\"value\":3},\"index2\":{\"type\":\"addOption\",\"options\":[1,2,3,4,5,6,7,8,9],\"x\":3,\"y\":4,\"value\":8}}", gameController.changeFile(file, destination, false));
+        assertEquals( "{\"x\":3,\"y\":4,\"type\":\"changeOptions\",\"options\":[1,2,3,4,5,6,7,8,9]}", gameController.changeFile(file, destination, false));
 
         Scanner reader = new Scanner(new File(file));
         String fullLine;
@@ -392,13 +419,13 @@ public class ControllerTests {
         reader = new Scanner(new File(destination));
 
         fullLine = reader.nextLine();
-        assertEquals("addOption 3 4 5", fullLine);
+        assertEquals("addOption 3 4 8", fullLine);
 
         fullLine = reader.nextLine();
         assertEquals("addOption 3 4 3", fullLine);
 
         fullLine = reader.nextLine();
-        assertEquals("addOption 3 4 8", fullLine);
+        assertEquals("addOption 3 4 5", fullLine);
 
     }
 
@@ -419,7 +446,7 @@ public class ControllerTests {
 
 
 
-        assertEquals( "{\"index0\":{\"type\":\"removeOption\",\"options\":[1,2,3,4,6,7,8,9],\"x\":3,\"y\":4,\"value\":5},\"index1\":{\"type\":\"removeOption\",\"options\":[1,2,4,6,7,8,9],\"x\":3,\"y\":4,\"value\":3},\"index2\":{\"type\":\"removeOption\",\"options\":[1,2,4,6,7,9],\"x\":3,\"y\":4,\"value\":8}}", gameController.changeFile(file, destination, true));
+        assertEquals( "{\"x\":3,\"y\":4,\"type\":\"changeOptions\",\"options\":[1,2,4,6,7,9]}", gameController.changeFile(file, destination, true));
 
         Scanner reader = new Scanner(new File(file));
         String fullLine;
@@ -431,13 +458,13 @@ public class ControllerTests {
         reader = new Scanner(new File(destination));
 
         fullLine = reader.nextLine();
-        assertEquals("addOption 3 4 5", fullLine);
+        assertEquals("addOption 3 4 8", fullLine);
 
         fullLine = reader.nextLine();
         assertEquals("addOption 3 4 3", fullLine);
 
         fullLine = reader.nextLine();
-        assertEquals("addOption 3 4 8", fullLine);
+        assertEquals("addOption 3 4 5", fullLine);
 
     }
 
@@ -458,7 +485,7 @@ public class ControllerTests {
 
 
 
-        assertEquals( "{\"index0\":{\"type\":\"removeOption\",\"options\":[1,2,3,4,6,7,8,9],\"x\":3,\"y\":4,\"value\":5},\"index1\":{\"type\":\"removeOption\",\"options\":[1,2,4,6,7,8,9],\"x\":3,\"y\":4,\"value\":3},\"index2\":{\"type\":\"removeOption\",\"options\":[1,2,4,6,7,9],\"x\":3,\"y\":4,\"value\":8}}", gameController.changeFile(file, destination, false));
+        assertEquals( "{\"x\":3,\"y\":4,\"type\":\"changeOptions\",\"options\":[1,2,4,6,7,9]}", gameController.changeFile(file, destination, false));
 
         Scanner reader = new Scanner(new File(file));
         String fullLine;
@@ -470,13 +497,13 @@ public class ControllerTests {
         reader = new Scanner(new File(destination));
 
         fullLine = reader.nextLine();
-        assertEquals("removeOption 3 4 5", fullLine);
+        assertEquals("removeOption 3 4 8", fullLine);
 
         fullLine = reader.nextLine();
         assertEquals("removeOption 3 4 3", fullLine);
 
         fullLine = reader.nextLine();
-        assertEquals("removeOption 3 4 8", fullLine);
+        assertEquals("removeOption 3 4 5", fullLine);
 
     }
 
@@ -498,7 +525,7 @@ public class ControllerTests {
 
 
 
-        assertEquals( "{\"index0\":{\"type\":\"addOption\",\"options\":[1,2,3,4,5,6,7,8,9],\"x\":3,\"y\":4,\"value\":5},\"index1\":{\"type\":\"addOption\",\"options\":[1,2,3,4,5,6,7,8,9],\"x\":3,\"y\":4,\"value\":3},\"index2\":{\"type\":\"addOption\",\"options\":[1,2,3,4,5,6,7,8,9],\"x\":3,\"y\":4,\"value\":8}}", gameController.changeFile(file, destination, true));
+        assertEquals( "{\"x\":3,\"y\":4,\"type\":\"changeOptions\",\"options\":[1,2,3,4,5,6,7,8,9]}", gameController.changeFile(file, destination, true));
 
         Scanner reader = new Scanner(new File(file));
         String fullLine;
@@ -510,13 +537,111 @@ public class ControllerTests {
         reader = new Scanner(new File(destination));
 
         fullLine = reader.nextLine();
-        assertEquals("removeOption 3 4 5", fullLine);
+        assertEquals("removeOption 3 4 8", fullLine);
 
         fullLine = reader.nextLine();
         assertEquals("removeOption 3 4 3", fullLine);
 
         fullLine = reader.nextLine();
-        assertEquals("removeOption 3 4 8", fullLine);
+        assertEquals("removeOption 3 4 5", fullLine);
+
+    }
+
+
+
+
+    @Test
+    public void changeFileNormalMixedOption() throws FileNotFoundException {
+        String file = "src/test/files/testMoves.txt";
+        String destination = "src/test/files/testRedo.txt";
+
+        GameController gameController = new GameController(file, destination);
+
+
+        PrintWriter fw = new PrintWriter(file);
+        fw.println("addOption 3 4 5");
+        fw.println("addOption 3 4 3");
+        fw.println("removeOption 3 4 5");
+        fw.println("addOption 3 4 8");
+        fw.println("removeOption 3 4 3");
+        fw.println("addOption 5 4 1");
+        fw.close();
+
+
+
+        assertEquals( "{\"x\":3,\"y\":4,\"type\":\"changeOptions\",\"options\":[1,2,4,6,7,8,9]}", gameController.changeFile(file, destination, false));
+
+        Scanner reader = new Scanner(new File(file));
+        String fullLine;
+
+        fullLine = reader.nextLine();
+        assertEquals("addOption 5 4 1", fullLine);
+
+
+        reader = new Scanner(new File(destination));
+
+        fullLine = reader.nextLine();
+        assertEquals("removeOption 3 4 3", fullLine);
+
+        fullLine = reader.nextLine();
+        assertEquals("addOption 3 4 8", fullLine);
+
+        fullLine = reader.nextLine();
+        assertEquals("removeOption 3 4 5", fullLine);
+
+        fullLine = reader.nextLine();
+        assertEquals("addOption 3 4 3", fullLine);
+
+        fullLine = reader.nextLine();
+        assertEquals("addOption 3 4 5", fullLine);
+
+
+    }
+
+    @Test
+    public void changeFileFlipMixedOption() throws FileNotFoundException {
+        String file = "src/test/files/testMoves.txt";
+        String destination = "src/test/files/testRedo.txt";
+
+        GameController gameController = new GameController(file, destination);
+
+
+        PrintWriter fw = new PrintWriter(file);
+        fw.println("addOption 3 4 5");
+        fw.println("addOption 3 4 3");
+        fw.println("removeOption 3 4 5");
+        fw.println("addOption 3 4 8");
+        fw.println("removeOption 3 4 3");
+        fw.println("addOption 5 4 1");
+        fw.close();
+
+
+
+        assertEquals( "{\"x\":3,\"y\":4,\"type\":\"changeOptions\",\"options\":[1,2,3,4,5,6,7,9]}", gameController.changeFile(file, destination, true));
+
+        Scanner reader = new Scanner(new File(file));
+        String fullLine;
+
+        fullLine = reader.nextLine();
+        assertEquals("addOption 5 4 1", fullLine);
+
+
+        reader = new Scanner(new File(destination));
+
+        fullLine = reader.nextLine();
+        assertEquals("removeOption 3 4 3", fullLine);
+
+        fullLine = reader.nextLine();
+        assertEquals("addOption 3 4 8", fullLine);
+
+        fullLine = reader.nextLine();
+        assertEquals("removeOption 3 4 5", fullLine);
+
+        fullLine = reader.nextLine();
+        assertEquals("addOption 3 4 3", fullLine);
+
+        fullLine = reader.nextLine();
+        assertEquals("addOption 3 4 5", fullLine);
 
     }
 

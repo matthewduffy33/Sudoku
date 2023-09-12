@@ -38,7 +38,7 @@ function undo(btn){
 
             checkUndo();//checks if there is still an undo and shows a redo
             showRedo();
-            mistakeHide("x"+response["index0"]["x"] + "y"+response["index0"]["y"]); //hide any mistakes made on undone cell
+            mistakeHide("x"+response["x"] + "y"+response["y"]); //hide any mistakes made on undone cell
 
         }
         btn.disabled = false;
@@ -57,8 +57,8 @@ function redo(btn){
         if(xhttp.responseText == "error"){  //if error with undo then show error modal
             var errorModal = new bootstrap.Modal(document.getElementById("errorModal"))
             errorModal.show();
-        }else{
 
+        }else{
             var response = JSON.parse(xhttp.responseText);
             responseHandler(response);
 
@@ -66,7 +66,7 @@ function redo(btn){
             checkRedo();
 
             if(document.getElementById("mistakeBtn").innerText=="Hide Mistakes"){  //hide any mistakes made on undone cell
-                mistakeShow("x"+response["index0"]["x"] + "y"+response["index0"]["y"]);
+                mistakeShow("x"+response["x"] + "y"+response["y"]);
             }
 
         }
@@ -80,35 +80,28 @@ function redo(btn){
 
 
 function responseHandler(response){
-    for (res in response){  //loop through response
-        var x = response[res]["x"];
-        var y = response[res]["y"];
+    var x = response["x"];
+    var y = response["y"];
 
-        //for whichever type it is do the action
-        if(response[res]["type"]=="addValue"){
-            document.getElementById("Numx"+x+"y"+y).value = response[res]["value"];
-            document.getElementById("Optionx"+x+"y"+y).innerHTML=""
-            document.getElementById("optionSection").classList.add("optionHidden");
-            newSelect(x, y);
+    //for whichever type it is do the action
+    if(response["type"]=="addValue"){
+         document.getElementById("Numx"+x+"y"+y).value = response["value"];
+         document.getElementById("Optionx"+x+"y"+y).innerHTML=""
+         document.getElementById("optionSection").classList.add("optionHidden");
+         newSelect(x, y);
 
-        }else if(response[res]["type"]=="removeValue"){
-            document.getElementById("Numx"+x+"y"+y).value = "";
-            getOptions(x,y);
-            newSelect(x, y);
+    }else if(response["type"]=="removeValue"){
+         document.getElementById("Numx"+x+"y"+y).value = "";
+         getOptions(x,y);
+         newSelect(x, y);
 
-        }else if(response[res]["type"]=="addOption"){
-            newSelect(x, y);
-            newOptions(response[res]["options"]);
-            document.getElementById("option"+response[res]["value"]).classList.remove("clickedIn");
-
-        }else{
-            newSelect(x, y);
-            newOptions(response[res]["options"]);
-            document.getElementById("option"+response[res]["value"]).classList.add("clickedIn");
-
-        }
+    }else if(response["type"]=="changeOptions"){
+         newOpt(x, y, response["options"]);
+         newSelect(x, y);
 
     }
+
+
 }
 
 
